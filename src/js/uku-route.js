@@ -1,8 +1,8 @@
 function RouteController(containerId){
     var pageStack = {};
-    var currentPage = undefined;
-    var defaultPage = undefined;
-    var otherwisePage = undefined;
+    var currentPage;
+    var defaultPage;
+    var otherwisePage;
     var self = this;
     var container = "#"+containerId;
     var anchors = {};
@@ -15,7 +15,7 @@ function RouteController(containerId){
             defaultPage = page;
         }
         pageStack[key] = page;
-    }
+    };
 
     this.default = function(key,path){
         registerRoute(key,path,true);
@@ -27,7 +27,7 @@ function RouteController(containerId){
     };
     this.otherwise = function(path){
         otherwisePage = {"path":path,"isDefault":false};
-        pageStack["otherwise"] = otherwisePage;
+        pageStack.otherwise = otherwisePage;
         return this;
     };
     this.goto = function(key){
@@ -79,7 +79,7 @@ function RouteController(containerId){
         window.onhashchange = function(e){
             hash = window.location.hash;
             self.goto(hash);
-        }
+        };
         if(hash){
             this.goto(hash);
         }else if(defaultPage){
