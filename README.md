@@ -1,4 +1,4 @@
-_Routjs is a simple route tool for single page application (anchor works on it)._
+_Routjs is a simple route tool for single page application (anchor can work on it)._
 
 **Demo**
 _[http://routejs.tiger.mopaasapp.com/](http://routejs.tiger.mopaasapp.com/)_
