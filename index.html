@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-dark.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>Routejs by momoko8443</title>
+  </head>
+
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>Routejs</h1>
+          <h2>A route tool of javascript for single page application</h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/momoko8443/routejs/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/momoko8443/routejs/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/momoko8443/routejs" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <p><em>Routjs is a simple route tool for single page application (anchor works on it).</em></p>
+
+<hr>
+
+<h2>
+<a id="how-to-use" class="anchor" href="#how-to-use" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to use</h2>
+
+<p><strong>Routejs depandes on jquery, please import jquery's library before routejs</strong></p>
+
+<div class="highlight highlight-html"><pre>&lt;<span class="pl-ent">script</span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>//cdn.bootcss.com/jquery/2.1.4/jquery.min.js<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">script</span>&gt;
+&lt;<span class="pl-ent">script</span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>src/js/uku-route.js<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">script</span>&gt;</pre></div>
+
+<p><strong>Define the route</strong></p>
+
+<div class="highlight highlight-javascript"><pre>$(<span class="pl-c1">document</span>).<span class="pl-c1">ready</span>(<span class="pl-k">function</span>(){
+    <span class="pl-k">var</span> route <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">RouteController</span>(<span class="pl-s"><span class="pl-pds">"</span>viewContainer<span class="pl-pds">"</span></span>)
+    .<span class="pl-c1">default</span>(<span class="pl-s"><span class="pl-pds">"</span>#page1<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>pages/page1.html<span class="pl-pds">"</span></span>)
+    .<span class="pl-c1">when</span>(<span class="pl-s"><span class="pl-pds">"</span>#page2<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>pages/page2.html<span class="pl-pds">"</span></span>)
+    .<span class="pl-c1">otherwise</span>(<span class="pl-s"><span class="pl-pds">"</span>pages/404.html<span class="pl-pds">"</span></span>)
+    .<span class="pl-c1">work</span>();
+});</pre></div>
+
+<div class="highlight highlight-html"><pre>&lt;<span class="pl-ent">body</span>&gt;
+    &lt;<span class="pl-ent">div</span> <span class="pl-e">class</span>=<span class="pl-s"><span class="pl-pds">"</span>borderBox<span class="pl-pds">"</span></span>&gt;
+        &lt;<span class="pl-ent">a</span> <span class="pl-e">href</span>=<span class="pl-s"><span class="pl-pds">"</span>#page1<span class="pl-pds">"</span></span>&gt;go to page1&lt;/<span class="pl-ent">a</span>&gt;
+        &lt;<span class="pl-ent">a</span> <span class="pl-e">href</span>=<span class="pl-s"><span class="pl-pds">"</span>#page2<span class="pl-pds">"</span></span>&gt;go to page2&lt;/<span class="pl-ent">a</span>&gt;
+        &lt;<span class="pl-ent">a</span> <span class="pl-e">href</span>=<span class="pl-s"><span class="pl-pds">"</span>#anchor<span class="pl-pds">"</span></span>&gt;anchor&lt;/<span class="pl-ent">a</span>&gt;
+        &lt;<span class="pl-ent">div</span> <span class="pl-e">class</span>=<span class="pl-s"><span class="pl-pds">"</span>clear<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">div</span>&gt;
+    &lt;/<span class="pl-ent">div</span>&gt;       
+    &lt;<span class="pl-ent">div</span> <span class="pl-e">id</span>=<span class="pl-s"><span class="pl-pds">"</span>viewContainer<span class="pl-pds">"</span></span>&gt;  
+    &lt;/<span class="pl-ent">div</span>&gt;
+    &lt;<span class="pl-ent">a</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>anchor<span class="pl-pds">"</span></span>&gt;this is an anchor's href&lt;/<span class="pl-ent">a</span>&gt;
+&lt;/<span class="pl-ent">body</span>&gt;</pre></div>
+
+<p><strong>Then, enjoy it</strong></p>
+        </section>
+
+        <footer>
+          Routejs is maintained by <a href="https://github.com/momoko8443">momoko8443</a><br>
+          This page was generated by <a href="https://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
+    </div>
+  </body>
+</html>
