@@ -42,11 +42,14 @@ function RouteController(containerId){
                          cacheOldPage();
                      }
                      pageCache[key].show();
+                     pageCache[key].addClass("showEffect");
                      currentPage = page;
                 }else{             
                     cacheOldPage();
                     $.get(page.path,function(html){
-                        $(container).append(html);
+                        var $html = $(html);
+                        $(container).append($html);
+                        $html.addClass("showEffect");
                         currentPage = page;
                     });
                 }
