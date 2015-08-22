@@ -2,8 +2,8 @@
     <head>
         <title>Route Demo</title>
         <link rel="stylesheet" href="resources/css/main.css">
-        <script src="bower_components/jquery/dist/jquery.min.js"></script>
-        <script src="build/js/uku-route.js"></script>
+        <!--<script src="build/js/uku-route.js"></script>-->
+        <script src="src/js/uku-route.js"></script>
     </head>
     
     <body>
@@ -20,16 +20,10 @@
     </body>
     <script>
         //------------------ Usage -----------------
-        
-        $(document).ready(function(){
-            var route = new RouteController("viewContainer")
-            .default("#page1","pages/page1.html")
-            .when("#page2","pages/page2.html")
-            .otherwise("pages/404.html")
-            .work();
-        });
-        
-        
-        
+        var route = new RouteController("viewContainer")
+        .default("#page1","pages/page1.html")
+        .when("#page2","pages/page2.html")
+        .otherwise("pages/404.html")
+        .work();   
     </script>
 </html>

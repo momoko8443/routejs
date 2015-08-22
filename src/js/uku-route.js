@@ -4,15 +4,18 @@ function RouteController(containerId){
     var defaultPage;
     var otherwisePage;
     var self = this;
-    var container = "#"+containerId;
+    var containerId = "#"+containerId;
     var anchors = {};
     var pageCache = {};
 
-    var registerRoute = function(key,path,isDefault){
+    var registerRoute = function(key,path,isDefault,isOtherwise){
         var hash = window.location.hash;
         var page = {"key":key,"path":path};
         if(isDefault){
             defaultPage = page;
+        }
+        if(isOtherwise){
+            otherwisePage = page;
         }
         pageStack[key] = page;
     };
@@ -26,8 +29,7 @@ function RouteController(containerId){
         return this;
     };
     this.otherwise = function(path){
-        otherwisePage = {"path":path,"isDefault":false};
-        pageStack.otherwise = otherwisePage;
+        registerRoute("otherwise",path,false,true);
         return this;
     };
     this.goto = function(key){
@@ -37,21 +39,34 @@ function RouteController(containerId){
                 if(pageCache[key]){
                      var oldPageKey = currentPage.key;
                      if(pageCache[oldPageKey]){
-                         pageCache[oldPageKey].hide();
+                         pageCache[oldPageKey].style.display = "none";
                      }else{
                          cacheOldPage();
                      }
-                     pageCache[key].show();
-                     pageCache[key].addClass("showEffect");
+                     pageCache[key].style.display = "block";
+                     if(pageCache[key].classList.contains("showEffect")){
+                         pageCache[key].classList.remove("showEffect");
+                     }
+                     pageCache[key].classList.add("showEffect");
                      currentPage = page;
                 }else{             
                     cacheOldPage();
-                    $.get(page.path,function(html){
-                        var $html = $(html);
-                        $(container).append($html);
-                        $html.addClass("showEffect");
-                        currentPage = page;
-                    });
+                    var ajax = new XMLHttpRequest();
+                    ajax.onreadystatechange = function(){
+                       if (ajax.readyState==4){
+                           if (ajax.status==200){
+                               var htmlText = ajax.responseText;
+                               containerDOM.insertAdjacentHTML('afterBegin', htmlText);
+                               var html = containerDOM.firstChild;
+                               html.classList.add("showEffect");
+                               currentPage = page;
+                           }else{
+                               alert("Can't load the route "+ page.key +"page from "+page.path);
+                           }
+                       }
+                    };
+                    ajax.open("GET",page.path,true);
+                    ajax.send(null);
                 }
             }    
         }else if(anchors[key] === undefined){
@@ -59,22 +74,25 @@ function RouteController(containerId){
         }
         
         function cacheOldPage(){
-            $(container).children().each(function(){
-                if($(this).is(":visible")){
-                    $(this).hide();
+            for(var i=0;i<containerDOM.children.length;i++){
+                var childDOM = containerDOM.children[i];
+                if(childDOM.style.display !== "none"){
+                    childDOM.style.display = "none";
                     var oldPageKey = currentPage.key;
-                    pageCache[oldPageKey] = $(this);
+                    pageCache[oldPageKey] = childDOM;
                     return false;
-                }                    
-            });
+                }
+            }
         }
     };
     this.work = function(){
+        containerDOM = document.querySelector(containerId);
         var hash = window.location.hash;
-        $("a[name]").each(function(){
-            var anchor = $(this).attr("name");
+        var anchorsDom = document.querySelectorAll("a[name]");
+        for(var i=0;i<anchorsDom.length;i++){
+            var anchor = anchorsDom[i].getAttribute("name");
             anchors["#"+anchor] = anchor;
-        });
+        }
         var self = this;
         window.onhashchange = function(e){
             hash = window.location.hash;
