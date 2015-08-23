@@ -44,9 +44,9 @@ function RouteController(containerId){
                          cacheOldPage();
                      }
                      pageCache[key].style.display = "block";
-                     if(pageCache[key].classList.contains("showEffect")){
+                     /*if(pageCache[key].classList.contains("showEffect")){
                          pageCache[key].classList.remove("showEffect");
-                     }
+                     }*/
                      pageCache[key].classList.add("showEffect");
                      currentPage = page;
                 }else{             
