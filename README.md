@@ -6,20 +6,17 @@ _[http://routejs.tiger.mopaasapp.com/](http://routejs.tiger.mopaasapp.com/)_
 ***
 
 ## How to use
-**Routejs depandes on jquery, please import jquery's library before routejs**
+**Import routejs' library**
 ```html
-<script src="//cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
 <script src="src/js/uku-route.js"></script>
 ```
 **Define the route**
 ```javascript
-$(document).ready(function(){
-    var route = new RouteController("viewContainer")
-    .default("#page1","pages/page1.html")
-    .when("#page2","pages/page2.html")
-    .otherwise("pages/404.html")
-    .work();
-});
+var route = new RouteController("viewContainer")
+.default("#page1","pages/page1.html")
+.when("#page2","pages/page2.html")
+.otherwise("pages/404.html")
+.work();
 ```
 ```html
 <body>
