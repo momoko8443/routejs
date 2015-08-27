@@ -19,6 +19,12 @@ function RouteController(containerId){
         }
         pageStack[key] = page;
     };
+	
+	var dispatchOnRouteChange = function(page){
+		if(self.onRouteChange && typeof(self.onRouteChange) === "function"){
+			self.onRouteChange.call(self,page);
+		}
+	};
 
     this.default = function(key,path){
         registerRoute(key,path,true);
@@ -44,11 +50,10 @@ function RouteController(containerId){
                          cacheOldPage();
                      }
                      pageCache[key].style.display = "block";
-                     /*if(pageCache[key].classList.contains("showEffect")){
-                         pageCache[key].classList.remove("showEffect");
-                     }*/
                      pageCache[key].classList.add("showEffect");
                      currentPage = page;
+					 var p = {"page":pageCache[key],"cache":true};
+					 dispatchOnRouteChange(p);
                 }else{             
                     cacheOldPage();
                     var ajax = new XMLHttpRequest();
@@ -60,6 +65,9 @@ function RouteController(containerId){
                                var html = containerDOM.firstChild;
                                html.classList.add("showEffect");
                                currentPage = page;
+							   var p = {"page":html,"cache":false};
+							   dispatchOnRouteChange(p);
+					 dispatchOnRouteChange(p);
                            }else{
                                alert("Can't load the route "+ page.key +"page from "+page.path);
                            }
@@ -104,4 +112,5 @@ function RouteController(containerId){
             this.goto(defaultPage.key);
         }
     };
+	this.onRouteChange = undefined;
 }
