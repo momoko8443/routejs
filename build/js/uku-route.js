@@ -1,1 +1,116 @@
-function RouteController(t){var e,n,o,a={},i=this,t="#"+t,r={},s={},h=function(t,e,i,r){var s=(window.location.hash,{key:t,path:e});i&&(n=s),r&&(o=s),a[t]=s},c=function(t){i.onRouteChange&&"function"==typeof i.onRouteChange&&i.onRouteChange.call(i,t)};this["default"]=function(t,e){return h(t,e,!0),this},this.when=function(t,e){return h(t,e,!1),this},this.otherwise=function(t){return h("otherwise",t,!1,!0),this},this["goto"]=function(t){function n(){for(var t=0;t<containerDOM.children.length;t++){var n=containerDOM.children[t];if("none"!==n.style.display){n.style.display="none";var o=e.key;return s[o]=n,!1}}}var o=a[t];if(o){if(o!==e)if(s[t]){var i=e.key;s[i]?s[i].style.display="none":n(),s[t].style.display="block",s[t].classList.add("showEffect"),e=o;var h={page:s[t],cache:!0};c(h)}else{n();var l=new XMLHttpRequest;l.onreadystatechange=function(){if(4==l.readyState)if(200==l.status){var t=l.responseText;containerDOM.insertAdjacentHTML("afterBegin",t);var n=containerDOM.firstChild;n.classList.add("showEffect"),e=o;var a={page:n,cache:!1};c(a),c(a)}else alert("Can't load the route "+o.key+"page from "+o.path)},l.open("GET",o.path,!0),l.send(null)}}else void 0===r[t]&&this["goto"]("otherwise")},this.work=function(){containerDOM=document.querySelector(t);for(var e=window.location.hash,o=document.querySelectorAll("a[name]"),a=0;a<o.length;a++){var i=o[a].getAttribute("name");r["#"+i]=i}var s=this;window.onhashchange=function(t){e=window.location.hash,s["goto"](e)},e?this["goto"](e):n&&this["goto"](n.key)},this.onRouteChange=void 0}
+function RouteController(container){
+    var pageStack = {};
+    var currentPage;
+    var defaultPage;
+    var otherwisePage;
+    var self = this;
+    var containerId = container;
+    var anchors = {};
+    var pageCache = {};
+
+    var registerRoute = function(key,path,isDefault,isOtherwise){
+        var hash = window.location.hash;
+        var page = {"key":key,"path":path};
+        if(isDefault){
+            defaultPage = page;
+        }
+        if(isOtherwise){
+            otherwisePage = page;
+        }
+        pageStack[key] = page;
+    };
+	
+	var dispatchOnRouteChange = function(page){
+		if(self.onRouteChange && typeof(self.onRouteChange) === "function"){
+			self.onRouteChange.call(self,page);
+		}
+	};
+
+    this.default = function(key,path){
+        registerRoute(key,path,true);
+        return this;
+    };
+    this.when = function(key,path){
+        registerRoute(key,path,false);
+        return this;
+    };
+    this.otherwise = function(path){
+        registerRoute("otherwise",path,false,true);
+        return this;
+    };
+    this.goto = function(key){
+        var page = pageStack[key];
+        if(page){
+            if(page !== currentPage){
+                if(pageCache[key]){
+                     var oldPageKey = currentPage.key;
+                     if(pageCache[oldPageKey]){
+                         pageCache[oldPageKey].style.display = "none";
+                     }else{
+                         cacheOldPage();
+                     }
+                     pageCache[key].style.display = "block";
+                     pageCache[key].classList.add("showEffect");
+                     currentPage = page;
+					 var p = {"page":pageCache[key],"cache":true};
+					 dispatchOnRouteChange(p);
+                }else{             
+                    cacheOldPage();
+                    var ajax = new XMLHttpRequest();
+                    ajax.onreadystatechange = function(){
+                       if (ajax.readyState==4){
+                           if (ajax.status==200){
+                               var htmlText = ajax.responseText;
+                               containerDOM.insertAdjacentHTML('afterBegin', htmlText);
+                               var html = containerDOM.firstChild;
+                               html.classList.add("showEffect");
+                               currentPage = page;
+							   var p = {"page":html,"cache":false};
+							   dispatchOnRouteChange(p);
+					 dispatchOnRouteChange(p);
+                           }else{
+                               alert("Can't load the route "+ page.key +"page from "+page.path);
+                           }
+                       }
+                    };
+                    ajax.open("GET",page.path,true);
+                    ajax.send(null);
+                }
+            }    
+        }else if(anchors[key] === undefined){
+            this.goto("otherwise");
+        }
+        
+        function cacheOldPage(){
+            for(var i=0;i<containerDOM.children.length;i++){
+                var childDOM = containerDOM.children[i];
+                if(childDOM.style.display !== "none"){
+                    childDOM.style.display = "none";
+                    var oldPageKey = currentPage.key;
+                    pageCache[oldPageKey] = childDOM;
+                    return false;
+                }
+            }
+        }
+    };
+    this.work = function(){
+        containerDOM = document.getElementById(containerId);
+        var hash = window.location.hash;
+        var anchorsDom = document.querySelectorAll("a[name]");
+        for(var i=0;i<anchorsDom.length;i++){
+            var anchor = anchorsDom[i].getAttribute("name");
+            anchors["#"+anchor] = anchor;
+        }
+        var self = this;
+        window.onhashchange = function(e){
+            hash = window.location.hash;
+            self.goto(hash);
+        };
+        if(hash){
+            this.goto(hash);
+        }else if(defaultPage){
+            this.goto(defaultPage.key);
+        }
+    };
+	this.onRouteChange = undefined;
+}

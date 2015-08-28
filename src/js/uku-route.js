@@ -1,10 +1,10 @@
-function RouteController(containerId){
+function RouteController(container){
     var pageStack = {};
     var currentPage;
     var defaultPage;
     var otherwisePage;
     var self = this;
-    var containerId = "#"+containerId;
+    var containerId = container;
     var anchors = {};
     var pageCache = {};
 
@@ -94,7 +94,7 @@ function RouteController(containerId){
         }
     };
     this.work = function(){
-        containerDOM = document.querySelector(containerId);
+        containerDOM = document.getElementById(containerId);
         var hash = window.location.hash;
         var anchorsDom = document.querySelectorAll("a[name]");
         for(var i=0;i<anchorsDom.length;i++){
