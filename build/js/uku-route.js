@@ -62,7 +62,7 @@ function RouteController(container){
                            if (ajax.status==200){
                                var htmlText = ajax.responseText;
                                containerDOM.insertAdjacentHTML('afterBegin', htmlText);
-                               var html = containerDOM.firstChild;
+                               var html = containerDOM.children[0];
                                html.classList.add("showEffect");
                                currentPage = page;
 							   var p = {"page":html,"cache":false};
