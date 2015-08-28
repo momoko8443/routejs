@@ -67,7 +67,6 @@ function RouteController(container){
                                currentPage = page;
 							   var p = {"page":html,"cache":false};
 							   dispatchOnRouteChange(p);
-					 dispatchOnRouteChange(p);
                            }else{
                                alert("Can't load the route "+ page.key +"page from "+page.path);
                            }
