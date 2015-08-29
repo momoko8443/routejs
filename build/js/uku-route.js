@@ -53,6 +53,15 @@ function RouteController(container) {
         registerRoute("otherwise", path, false, true);
         return this;
     };
+    
+    this.addAnchor = function(anchor){
+        if(anchor.charAt(0) !== "#"){
+            anchor = "#"+anchor;
+        }
+        anchors[anchor] = anchor;
+        return this;
+    }
+    
     this.goto = function (key) {
         var page = pageStack[key];
         if (page) {
