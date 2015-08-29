@@ -30,7 +30,7 @@ function RouteController(container) {
     };
 
     var generateDivId = function () {
-        return new Date().toTimeString + "_" + Math.floor(Math.random * 100000).toString;
+        return new Date().getTime() + "_" + Math.floor(Math.random() * 100000).toString();
     };
 
     this.default = function (key, path) {
