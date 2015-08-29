@@ -28,6 +28,14 @@ function RouteController(container) {
             self.onRouteChange.call(self, page);
         }
     };
+    
+    var dealWithAnchor = function (element) {
+        var anchorsDom = element.querySelectorAll("a[name]");
+        for (var i = 0; i < anchorsDom.length; i++) {
+            var anchor = anchorsDom[i].getAttribute("name");
+            anchors["#" + anchor] = anchor;
+        }    
+    };
 
     var generateDivId = function () {
         return new Date().getTime() + "_" + Math.floor(Math.random() * 100000).toString();
@@ -75,6 +83,7 @@ function RouteController(container) {
                                 var html = containerDOM.children[0];
                                 html.classList.add("showEffect");
                                 html.setAttribute("id", generateDivId());
+                                dealWithAnchor(html);
                                 currentPage = page;
                                 var p = {
                                     "page": html,
@@ -109,11 +118,7 @@ function RouteController(container) {
     this.work = function () {
         containerDOM = document.getElementById(containerId);
         var hash = window.location.hash;
-        var anchorsDom = document.querySelectorAll("a[name]");
-        for (var i = 0; i < anchorsDom.length; i++) {
-            var anchor = anchorsDom[i].getAttribute("name");
-            anchors["#" + anchor] = anchor;
-        }
+        dealWithAnchor(document);
         var self = this;
         window.onhashchange = function (e) {
             hash = window.location.hash;
