@@ -109,6 +109,7 @@ function RouteController(container) {
                     ajax.open("GET", page.path, true);
                     ajax.send(null);
                 }
+                document.location.hash = key;
             }
         } else if (anchors[key] === undefined) {
             this.goto("otherwise");
