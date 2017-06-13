@@ -24,6 +24,8 @@ function RouteController(container) {
     };
 
     var dispatchOnRouteChange = function (page) {
+        //document.location.hash = page.key;
+        window.history.pushState(null, null, page.key);
         if (self.onRouteChange && typeof (self.onRouteChange) === "function") {
             self.onRouteChange.call(self, page);
         }
@@ -109,7 +111,6 @@ function RouteController(container) {
                     ajax.open("GET", page.path, true);
                     ajax.send(null);
                 }
-                document.location.hash = key;
             }
         } else if (anchors[key] === undefined) {
             this.goto("otherwise");
