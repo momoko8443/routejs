@@ -1,18 +1,29 @@
-function RouteController(container) {
+import pathToRegexp from 'path-to-regexp';
+import '../css/effect.css';
+
+export function UkuRouter(container){
+   
     var pageStack = {};
     var currentPage;
     var defaultPage;
     var otherwisePage;
     var self = this;
-    var containerId = container;
+    var containerDOM;
     var anchors = {};
     var pageCache = {};
 
     var registerRoute = function (key, path, isDefault, isOtherwise) {
-        var hash = window.location.hash;
+        //var hash = window.location.hash;
+        var regExp;
+        if(key !== 'otherwise'){
+            var re = pathToRegexp(key);
+            regExp = re.source;
+        }
+        
         var page = {
             "key": key,
-            "path": path
+            "path": path,
+            "re": regExp
         };
         if (isDefault) {
             defaultPage = page;
@@ -23,11 +34,11 @@ function RouteController(container) {
         pageStack[key] = page;
     };
 
-    var dispatchOnRouteChange = function (page) {
+    var dispatchOnRouteChange = function (page,params) {
         //document.location.hash = page.key;
         window.history.pushState(null, null, page.key);
         if (self.onRouteChange && typeof (self.onRouteChange) === "function") {
-            self.onRouteChange.call(self, page);
+            self.onRouteChange.call(self, page,params);
         }
     };
     
@@ -42,6 +53,38 @@ function RouteController(container) {
     var generateDivId = function () {
         return new Date().getTime() + "_" + Math.floor(Math.random() * 100000).toString();
     };
+
+    var matchPath = function(url) {
+        if(url === 'otherwise'){
+            return pageStack[url];
+        }
+        for(var key in pageStack){
+            var re = pageStack[key].re;
+            if(new RegExp(re).test(url)){
+                return pageStack[key];
+            }
+        }
+        return null;
+    };
+
+    var analyzePath = function(url){
+        if(url === 'otherwise'){
+            return [];
+        }
+        for(var key in pageStack){
+            var re = pageStack[key].re;
+            var result = new RegExp(re).exec(url);
+            if(result && result.length > 0){
+                result.shift();
+                delete result['index'];
+                delete result['input'];
+                delete result['groups'];
+                return result;
+            }
+        }
+        return [];
+    }
+
 
     this.default = function (key, path) {
         registerRoute(key, path, true);
@@ -65,25 +108,27 @@ function RouteController(container) {
     }
     
     this.goto = function (key) {
-        var page = pageStack[key];
+        var page = matchPath(key);
         if (page) {
             if (page !== currentPage) {
-                if (pageCache[key]) {
-                    var oldPageKey = currentPage.key;
+                var currentPageKey = page.re;
+                if (pageCache[currentPageKey]) {
+                    var oldPageKey = currentPage.re;
                     if (pageCache[oldPageKey]) {
                         pageCache[oldPageKey].style.display = "none";
                     } else {
                         cacheOldPage();
                     }
-                    pageCache[key].style.display = "block";
-                    pageCache[key].classList.add("showEffect");
+                    pageCache[currentPageKey].style.display = "block";
+                    pageCache[currentPageKey].classList.add("showEffect");
                     currentPage = page;
                     var p = {
                         "key": key,
-                        "page": pageCache[key],
+                        "page": pageCache[currentPageKey],
                         "cache": true
                     };
-                    dispatchOnRouteChange(p);
+                    var params = analyzePath(key);
+                    dispatchOnRouteChange(p,params);
                 } else {
                     cacheOldPage();
                     var ajax = new XMLHttpRequest();
@@ -102,7 +147,8 @@ function RouteController(container) {
                                     "page": html,
                                     "cache": false
                                 };
-                                dispatchOnRouteChange(p);
+                                var params = analyzePath(key);
+                                dispatchOnRouteChange(p, params);
                             } else {
                                 alert("Can't load the route " + page.key + "page from " + page.path);
                             }
@@ -121,7 +167,7 @@ function RouteController(container) {
                 var childDOM = containerDOM.children[i];
                 if (childDOM.style.display !== "none") {
                     childDOM.style.display = "none";
-                    var oldPageKey = currentPage.key;
+                    var oldPageKey = currentPage.re;
                     pageCache[oldPageKey] = childDOM;
                     return false;
                 }
@@ -129,7 +175,7 @@ function RouteController(container) {
         }
     };
     this.work = function () {
-        containerDOM = document.getElementById(containerId);
+        containerDOM = document.getElementById(container);
         var hash = window.location.hash;
         dealWithAnchor(document);
         var self = this;
@@ -145,3 +191,4 @@ function RouteController(container) {
     };
     this.onRouteChange = undefined;
 }
+
