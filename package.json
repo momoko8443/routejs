@@ -1,8 +1,8 @@
 {
   "name": "uku-routejs",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "routejs is a simple route tool for spa",
-  "main": "index.js",
+  "main": "dist/uku-router.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --config webpack.config.js"
