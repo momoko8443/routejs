@@ -1,5 +1,5 @@
 {
-  "name": "routejs",
+  "name": "uku-routejs",
   "version": "1.0.0",
   "description": "routejs is a simple route tool for spa",
   "main": "index.js",
