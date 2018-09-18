@@ -12,7 +12,7 @@ export function UkuRouter(container){
     var anchors = {};
     var pageCache = {};
 
-    var registerRoute = function (key, path, isDefault, isOtherwise) {
+    var registerRoute = function (key, path, handler, isDefault, isOtherwise) {
         //var hash = window.location.hash;
         var regExp;
         if(key !== 'otherwise'){
@@ -23,7 +23,8 @@ export function UkuRouter(container){
         var page = {
             "key": key,
             "path": path,
-            "re": regExp
+            "re": regExp,
+            "handler": handler
         };
         if (isDefault) {
             defaultPage = page;
@@ -39,6 +40,9 @@ export function UkuRouter(container){
         window.history.pushState(null, null, page.key);
         if (self.onRouteChange && typeof (self.onRouteChange) === "function") {
             self.onRouteChange.call(self, page,params);
+        }
+        if(page.handler && typeof page.handler === "function"){
+            page.handler(params);
         }
     };
     
@@ -86,16 +90,16 @@ export function UkuRouter(container){
     }
 
 
-    this.default = function (key, path) {
-        registerRoute(key, path, true);
+    this.default = function (key, path, handler) {
+        registerRoute(key, path, handler, true);
         return this;
     };
-    this.when = function (key, path) {
-        registerRoute(key, path, false);
+    this.when = function (key, path, handler) {
+        registerRoute(key, path, handler, false);
         return this;
     };
-    this.otherwise = function (path) {
-        registerRoute("otherwise", path, false, true);
+    this.otherwise = function (path, handler) {
+        registerRoute("otherwise", path, handler, false, true);
         return this;
     };
     
@@ -125,7 +129,8 @@ export function UkuRouter(container){
                     var p = {
                         "key": key,
                         "page": pageCache[currentPageKey],
-                        "cache": true
+                        "cache": true,
+                        "handler":page.handler
                     };
                     var params = analyzePath(key);
                     dispatchOnRouteChange(p,params);
@@ -145,7 +150,8 @@ export function UkuRouter(container){
                                 var p = {
                                     "key":key,
                                     "page": html,
-                                    "cache": false
+                                    "cache": false,
+                                    "handler": page.handler
                                 };
                                 var params = analyzePath(key);
                                 dispatchOnRouteChange(p, params);
