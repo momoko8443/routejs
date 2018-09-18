@@ -1179,7 +1179,7 @@ function UkuRouter(container){
             self.onRouteChange.call(self, page,params);
         }
         if(page.handler && typeof page.handler === "function"){
-            page.handler(params);
+            page.handler(page,params);
         }
     };
     

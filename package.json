@@ -1,6 +1,6 @@
 {
   "name": "uku-routejs",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "routejs is a simple route tool for spa",
   "main": "dist/uku-router.js",
   "scripts": {
